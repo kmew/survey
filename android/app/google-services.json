@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1050827876701",
+    "firebase_url": "https://survey-a28a9.firebaseio.com",
+    "project_id": "survey-a28a9",
+    "storage_bucket": "survey-a28a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050827876701:android:f8b5c459b753a73e4ba0b4",
+        "android_client_info": {
+          "package_name": "com.example.survey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050827876701-4p3clfmttot5quj24p55fd6v6sdaqhoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8ierYC4VJ2IvT-N52scezGA4PMD0rdjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050827876701-4p3clfmttot5quj24p55fd6v6sdaqhoc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
