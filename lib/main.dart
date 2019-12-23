@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:survey/services/crud.dart';
 import 'package:survey/form.dart';
 
 
@@ -36,8 +37,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
     return Container(
+      margin: EdgeInsets.only(top: 3.0, bottom: 5.0),
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.blueAccent)
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            offset: Offset(0.0, 15.0),
+            blurRadius: 5.0,
+          )
+        ],
       ),
       child: ListTile(
         title: Row(
@@ -74,13 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          Firestore.instance.runTransaction((transaction) async {
-                            DocumentSnapshot freshSnap =
-                            await transaction.get(document.reference);
-                            await transaction.update(freshSnap.reference, {
-                              'votes': freshSnap['votes'] + 1,
-                            });
-                          });
+                          crudMedthods().plusData(document.reference);
                         },
                       ),
                     ),
@@ -94,19 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          Firestore.instance.runTransaction((transaction) async {
-                            DocumentSnapshot freshSnap =
-                            await transaction.get(document.reference);
-                            if(freshSnap['votes'] > 0) {
-                              await transaction.update(freshSnap.reference, {
-                                'votes': freshSnap['votes'] - 1,
-                              });
-                            } else {
-                              await transaction.update(freshSnap.reference, {
-                                'votes': freshSnap['votes'],
-                              });
-                            }
-                          });
+                          crudMedthods().minusData(document.reference);
                         },
                       ),
                     ),
@@ -133,8 +125,23 @@ class _MyHomePageState extends State<MyHomePage> {
             return ListView.builder(
               itemExtent: 80.0,
               itemCount: snapshot.data.documents.length,
-              itemBuilder: (context, index) =>
-                  _buildListItem(context, snapshot.data.documents[index]),
+              itemBuilder: (context, index) {
+                return Dismissible(
+                  key: Key(index.toString()),
+                  child: _buildListItem(context, snapshot.data.documents[index]),
+                  onDismissed: (direction) {
+                    if(direction == DismissDirection.startToEnd) {
+                      print("SWIPE: RIGHT");
+                    } else if(direction == DismissDirection.endToStart) {
+                      print("SWIPE: LEFT");
+                    }
+                    crudMedthods().deleteData(snapshot.data.documents[index].documentID);
+                  },
+                  background: Container(
+                    color: Colors.red,
+                  ),
+                );
+              },
             );
           }
       ),
@@ -147,10 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   Name = typing;
                 });
-                print(Name);
               },
               onSubmitName: () {
                 print("Submit: $Name");
+                crudMedthods().addData(Name);
               },
             )),
           );
